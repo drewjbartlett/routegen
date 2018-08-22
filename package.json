@@ -10,7 +10,7 @@
     "lint:fix": "npm run lint -- --fix",
     "unit": "jest --maxWorkers 2",
     "unit:watch": "jest --watch",
-    "prepublish": "npm run compile"
+    "prepare": "npm run compile"
   },
   "repository": {
     "type": "git",
