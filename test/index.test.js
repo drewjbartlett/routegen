@@ -1,4 +1,4 @@
-import routeGen from './index';
+import routeGen from '../src/index';
 
 describe('routes generator', () => {
   it('constructor test', () => {
