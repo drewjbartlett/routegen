@@ -1,6 +1,6 @@
 import routeGen from '../src/index';
 
-describe('routes generator', () => {
+describe('routeGen', () => {
   it('constructor test', () => {
     const routes = routeGen();
 
@@ -15,17 +15,17 @@ describe('routes generator', () => {
 
     routes.set('foo', '/bar');
 
-    expect(routes.get('foo')).toEqual(expected);
+    expect(routes.generate('foo')).toEqual(expected);
   });
 
-  describe('set/get', () => {
+  describe('set/generate', () => {
     it('should add and retrieve a route', () => {
       const routes = routeGen();
       const expected = '/api/foo/bar';
 
       routes.set('foo', expected);
 
-      expect(routes.get('foo')).toEqual(expected);
+      expect(routes.generate('foo')).toEqual(expected);
     });
   });
 
@@ -43,7 +43,7 @@ describe('routes generator', () => {
         },
       );
 
-      expect(routes.get('foo')).toEqual(expected);
+      expect(routes.generate('foo')).toEqual(expected);
     });
 
     it('should add a name prefix', () => {
@@ -59,7 +59,7 @@ describe('routes generator', () => {
         },
       );
 
-      expect(routes.get(expected)).toBeDefined();
+      expect(routes.generate(expected)).toBeDefined();
     });
 
     it('should add a name and path prefix', () => {
@@ -77,7 +77,7 @@ describe('routes generator', () => {
         },
       );
 
-      expect(routes.get(expectedName)).toEqual(expectedPath);
+      expect(routes.generate(expectedName)).toEqual(expectedPath);
     });
   });
 
@@ -93,12 +93,28 @@ describe('routes generator', () => {
   });
 
   describe('generate()', () => {
-    it('should generate a route with params', () => {
-      const routes = routeGen();
+    const routes = routeGen();
 
-      routes.set('foo', '/bar/{id}');
+    routes.set('foo', '/api/foo/bar');
+    routes.set('foo_bar', '/bar/{id}');
+    routes.set('foo_bar_baz', '/bar/{id}/{name}/foo');
 
-      expect(routes.generate('foo', { id: 1 })).toEqual('/bar/1');
+    it('should generate a route with no params', () => {
+      const expected = '/api/foo/bar';
+
+      expect(routes.generate('foo')).toEqual(expected);
+    });
+
+    it('should generate a route with a single params', () => {
+      const expected = '/bar/1';
+
+      expect(routes.generate('foo_bar', { id: 1 })).toEqual(expected);
+    });
+
+    it('should generate a route with multiple params', () => {
+      const expected = '/bar/134/drew/foo';
+
+      expect(routes.generate('foo_bar_baz', { id: 134, name: 'drew' })).toEqual(expected);
     });
   });
 
@@ -127,6 +143,33 @@ describe('routes generator', () => {
       const routes = routeGen();
 
       expect(routes._replaceURLParams('/foo/{id}/{foo}', { id: 1, foo: 'bar' })).toEqual('/foo/1/bar');
+    });
+  });
+
+  describe('lock()', () => {
+    const routes = routeGen();
+
+    routes.set('foo_bar', '/foo/bar');
+    routes.set('foo_bar_baz', '/foo/bar/{id}');
+
+    const locked = routes.lock();
+
+    it('should not have access to set() or prefix()', () => {
+      expect(locked.set).toBeUndefined();
+      expect(locked.prefix).toBeUndefined();
+    });
+
+    it('should have access to the public api', () => {
+      expect(locked.generate).not.toBeUndefined();
+      expect(locked.all).not.toBeUndefined();
+    });
+
+    it('should be able to generate a route', () => {
+      expect(locked.generate('foo_bar')).toEqual('/foo/bar');
+    });
+
+    it('should be able to generate an interpolated route', () => {
+      expect(locked.generate('foo_bar_baz', { id: 123 })).toEqual('/foo/bar/123');
     });
   });
 });

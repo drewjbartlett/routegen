@@ -39,20 +39,35 @@ export default (config = {}) => {
     return mappedUrl;
   };
 
-  const get = k => `${_config.baseUrl}${_routes.get(k)}`;
+  const _get = k => `${_config.baseUrl}${_routes.get(k)}`;
 
-  const generate = (k, params) => {
-    const url = get(k);
+  /**
+   * Generate a route from a key and url params to interpolate
+   *
+   * @param {string} k
+   * @param {Object} params
+   * @return {string}
+   */
+  const generate = (k, params = {}) => _replaceURLParams(_get(k), params);
 
-    if (url) {
-      return _replaceURLParams(url, params);
-    }
-  };
-
+  /**
+   * Set a new route with a key and value
+   *
+   * @param {string} k
+   * @param {string} v
+   */
   const set = (k, v) => {
     _routes.set(k, v);
   };
 
+  /**
+   * Prefix a set of routes
+   *
+   * @param {Object} prefixes
+   * @param {string} prefixes.path
+   * @param {string} prefixes.name
+   * @param {Object} newRoutes
+   */
   const prefix = (prefixes = { path: '', name: '' }, newRoutes) => {
     const name = prefixes.name ? `${prefixes.name}_` : '';
     const path = prefixes.path ? `${prefixes.path}` : '';
@@ -62,6 +77,11 @@ export default (config = {}) => {
     });
   };
 
+  /**
+   * Retrieve all the routes
+   *
+   * @return {array}
+   */
   const all = () => {
     const routes = [];
 
@@ -72,14 +92,25 @@ export default (config = {}) => {
     return routes;
   };
 
+  /**
+   * Lock the routes so there's no abililty call set
+   *
+   * @return {Object}
+   */
+  const lock = () => ({
+    generate,
+    all,
+  });
+
   return {
-    get,
     generate,
     set,
     prefix,
     all,
+    lock,
 
     // for testing purposes
+    _get,
     _getUrlParams,
     _replaceURLParams,
   };

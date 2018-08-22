@@ -36,16 +36,13 @@ exports.default = function () {
     return mappedUrl;
   };
 
-  var get = function get(k) {
+  var _get = function _get(k) {
     return '' + _config.baseUrl + _routes.get(k);
   };
 
-  var generate = function generate(k, params) {
-    var url = get(k);
-
-    if (url) {
-      return _replaceURLParams(url, params);
-    }
+  var generate = function generate(k) {
+    var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    return _replaceURLParams(_get(k), params);
   };
 
   var set = function set(k, v) {
@@ -74,13 +71,21 @@ exports.default = function () {
     return routes;
   };
 
+  var lock = function lock() {
+    return {
+      generate: generate,
+      all: all
+    };
+  };
+
   return {
-    get: get,
     generate: generate,
     set: set,
     prefix: prefix,
     all: all,
+    lock: lock,
 
+    _get: _get,
     _getUrlParams: _getUrlParams,
     _replaceURLParams: _replaceURLParams
   };
