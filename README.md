@@ -22,7 +22,7 @@ And what if you decide to change your routes? You need to update them all over t
 
 ### The Solution / Basic Usage
 
-Rather than have the "magic strings" all over the place, you can define them in one place and use them everywhere. Need to inerpolate a value into a url? No problem. You can even disable redefining routes after they're exported with the magic `lock()` method. You can even group certain routes with a prefix and namespace with the `prefix()` method. `routeGen` is incredibly simple and incredibly lightweight at only 1.6kb.
+Rather than have the "magic strings" all over the place, you can define them in one place and use them everywhere. Need to inerpolate a value into a url? No problem. You can even disable redefining routes after they're exported with the magic `lock()` method. Grouping certain routes with a prefix and namespace is a breeze with the `prefix()` method. `routeGen` is simple, useful and incredibly lightweight at only 1.6kb.
 
 ```js
 // routes.js
