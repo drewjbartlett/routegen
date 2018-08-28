@@ -5,13 +5,24 @@
 
 Define your API and SPA routes in one place. Use them anywhere.
 
-### Installation 
+### The Problem
 
-```bash
-npm i routegen --save
+Defining your routes at "magic strings" is messy never a good idea, especially as your app grows. You might have something like this: 
+
+```js
+// foo.js
+http.get(`/user/${userId}`).then(...)
+http.post(`/some-service/create-something`).then(...)
+
+// and then again in bar.js
+http.get(`/user/${userId}`).then(...)
+http.post(`/some-service/create-something`).then(...)
 ```
+And what if you decide to change your routes? You need to update them all over the place. What if you mistype a route in one place? It can break things and get messy. `routeGen` fixes all these issues. 
 
-### Basic Usage
+### The Solution / Basic Usage
+
+Rather than have the "magic strings" all over the place, you can define them in one place and use them everywhere. Need to inerpolate a value into a url? No problem. You can even disable redefining routes after they're exported with the magic `lock()` method. You can even group certain routes with a prefix and namespace with the `prefix()` method. `routeGen` is incredibly simple and incredibly lightweight at only 1.6kb.
 
 ```js
 // routes.js
@@ -45,6 +56,14 @@ import routes from './routes';
 
 axios.post(routes.generate('login'), { data }); // POST => http://myapi.test/api/auth/login
 axios.generate(routes.generate('get_user_by_id', { id: 1 })); // GET => http://myapi.test/api/user/1
+```
+
+___
+
+### Installation 
+
+```bash
+npm i routegen --save
 ```
 
 ___
@@ -122,7 +141,7 @@ routes.set('foo_bar_baz', '/foo/bar/{id}');
 export default routes.lock();
 ```
 
-Calling `lock()` returns an api with access only to `get()`, `generate()`, and `all()`. So, the above example could not be modified once imported.
+Calling `lock()` returns an api with access only to `generate()`, and `all()`. So, the above example could not be modified once imported.
  
 #### prefix({ path, name })
  
