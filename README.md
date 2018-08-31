@@ -70,7 +70,7 @@ ___
 
 ### API
 
-### routeGen({...})
+#### routeGen({...})
 
 To define sets of routes, simply call import `routegen` and call it as a function. The only parameter it accepts is an object with a `baseUrl`.
 
@@ -97,7 +97,7 @@ const spaRoutes = routeGen({
 
 ```
 
-#### set(k, v)
+#### set(key, value)
 
 Pretty straight forward. Set a new route.
 
@@ -106,7 +106,7 @@ routes.set('get_users', '/users');
 routes.set('get_user_by_id', '/users/{id}');
 ```
 
-#### generate(key, data = {})
+#### generate(key, params = {})
 
 Retrieve a value from the routes. 
 
