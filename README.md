@@ -7,7 +7,7 @@ Define your API and SPA routes in one place. Use them anywhere.
 
 ### The Problem
 
-Defining your routes at "magic strings" is messy never a good idea, especially as your app grows. You might have something like this: 
+Defining your routes as "magic strings" is messy never a good idea, especially as your app grows. You might have something like this: 
 
 ```js
 // foo.js
