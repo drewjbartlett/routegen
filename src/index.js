@@ -20,14 +20,6 @@ export default (config = {}) => {
   const _stringifyParams = params => Object.keys(params)
     .reduce((acc, k) => `${acc}${k}=${encodeURIComponent(params[k])}&`, '')
     .replace(/&$/, '');
-  //   const queryString = [];
-
-  //   Object.keys(params).forEach(k => {
-  //     queryString.push(`${k}=${encodeURIComponent(params[k])}`);
-  //   });
-
-  //   return queryString.join('&');
-  // };
 
   /**
    * This replaces any interpolated params with items passed in via the routeParams object
