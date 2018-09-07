@@ -98,6 +98,7 @@ describe('routeGen', () => {
     routes.set('foo', '/api/foo/bar');
     routes.set('foo_bar', '/bar/{id}');
     routes.set('foo_bar_baz', '/bar/{id}/{name}/foo');
+    routes.set('foo_to_append', '/api/foo/append');
 
     it('should generate a route with no params', () => {
       const expected = '/api/foo/bar';
@@ -115,6 +116,30 @@ describe('routeGen', () => {
       const expected = '/bar/134/drew/foo';
 
       expect(routes.generate('foo_bar_baz', { id: 134, name: 'drew' })).toEqual(expected);
+    });
+
+    it('should append query string params to the url if there are no params set', () => {
+      const expected = '/api/foo/append?id=1';
+
+      expect(routes.generate('foo_to_append', { id: 1 })).toEqual(expected);
+    });
+
+    it('should append query params when interpolated params are passed before them', () => {
+      const expected = '/bar/1?name=drew';
+
+      expect(routes.generate('foo_bar', { id: 1 }, { name: 'drew' })).toEqual(expected);
+    });
+  });
+
+  describe('_stringifyParams', () => {
+    const routes = routeGen();
+
+    routes.set('foo_to_append', '/api/foo/append');
+
+    it('should stringify multiple params', () => {
+      const expected = '/api/foo/append?id=1&bar=baz';
+
+      expect(routes.generate('foo_to_append', { id: 1, bar: 'baz' })).toEqual(expected);
     });
   });
 
@@ -136,13 +161,13 @@ describe('routeGen', () => {
     it('should replace the url params from a url and an object', () => {
       const routes = routeGen();
 
-      expect(routes._replaceURLParams('/foo/{id}', { id: 1 })).toEqual('/foo/1');
+      expect(routes._replaceURLParams('/foo/{id}', { id: 1 }, {})).toEqual('/foo/1');
     });
 
     it('should replace the url params from a url and an object', () => {
       const routes = routeGen();
 
-      expect(routes._replaceURLParams('/foo/{id}/{foo}', { id: 1, foo: 'bar' })).toEqual('/foo/1/bar');
+      expect(routes._replaceURLParams('/foo/{id}/{foo}', { id: 1, foo: 'bar' }, {})).toEqual('/foo/1/bar');
     });
   });
 
