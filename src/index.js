@@ -17,23 +17,36 @@ export default (config = {}) => {
     return [];
   };
 
+  const _stringifyParams = params => Object.keys(params)
+    .reduce((acc, k) => `${acc}${k}=${encodeURIComponent(params[k])}&`, '')
+    .replace(/&$/, '');
+
   /**
    * This replaces any interpolated params with items passed in via the routeParams object
    *
    * @param {string} url
    * @param {Object} urlParams
+   * @param {Object} queryParams
    * @return {string}
    */
-  const _replaceURLParams = (url, urlParams) => {
+  const _replaceURLParams = (url, urlParams, queryParams) => {
     const routeParams = _getUrlParams(url);
     let mappedUrl = url;
 
-    // only do this if we have route params && params to replace
-    if (routeParams.length && Object.keys(urlParams).length !== 0) {
-      // replace each occurrence of the param with the value passed in
-      routeParams.forEach(param => {
-        mappedUrl = mappedUrl.replace(`{${param}}`, urlParams[param]);
-      });
+    if (Object.keys(urlParams).length !== 0) {
+      // only do this if we have route params
+      if (routeParams.length) {
+        // replace each occurrence of the param with the value passed in
+        routeParams.forEach(param => {
+          mappedUrl = mappedUrl.replace(`{${param}}`, urlParams[param]);
+        });
+      } else {
+        mappedUrl = `${mappedUrl}?${_stringifyParams(urlParams)}`;
+      }
+    }
+
+    if (Object.keys(queryParams).length !== 0) {
+      mappedUrl = `${mappedUrl}?${_stringifyParams(queryParams)}`;
     }
 
     return mappedUrl;
@@ -46,9 +59,10 @@ export default (config = {}) => {
    *
    * @param {string} k
    * @param {Object} params
+   * @param {Object} queryParams
    * @return {string}
    */
-  const generate = (k, params = {}) => _replaceURLParams(_get(k), params);
+  const generate = (k, params = {}, queryParams = {}) => _replaceURLParams(_get(k), params, queryParams);
 
   /**
    * Set a new route with a key and value
@@ -113,5 +127,6 @@ export default (config = {}) => {
     _get,
     _getUrlParams,
     _replaceURLParams,
+    _stringifyParams,
   };
 };

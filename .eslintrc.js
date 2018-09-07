@@ -5,6 +5,7 @@ module.exports = {
     'arrow-parens': ['error', 'as-needed'],
     'indent': ['error', 2],
     'class-methods-use-this': ['error', { 'exceptMethods': ['boot'] }],
+    'max-len': ['error', { 'code': 120 }],
     'no-useless-constructor': 0,
     'no-param-reassign': 0,
     'no-console': 0,
@@ -23,6 +24,7 @@ module.exports = {
   },
   'globals': {
     'it': true,
+    'xit': true,
     'describe': true,
     'beforeAll': true,
     'beforeEach': true,

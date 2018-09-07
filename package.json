@@ -1,6 +1,6 @@
 {
   "name": "routegen",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "compile": "babel --presets=es2015 --no-comments -d dist src",
     "lint": "eslint --ext .js src test",
     "lint:fix": "npm run lint -- --fix",
-    "unit": "jest --maxWorkers 2",
+    "unit": "jest test --maxWorkers 2",
     "unit:watch": "jest test --watch",
     "prepare": "npm run compile"
   },

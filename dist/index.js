@@ -23,14 +23,28 @@ exports.default = function () {
     return [];
   };
 
-  var _replaceURLParams = function _replaceURLParams(url, urlParams) {
+  var _stringifyParams = function _stringifyParams(params) {
+    return Object.keys(params).reduce(function (acc, k) {
+      return '' + acc + k + '=' + encodeURIComponent(params[k]) + '&';
+    }, '').replace(/&$/, '');
+  };
+
+  var _replaceURLParams = function _replaceURLParams(url, urlParams, queryParams) {
     var routeParams = _getUrlParams(url);
     var mappedUrl = url;
 
-    if (routeParams.length && Object.keys(urlParams).length !== 0) {
-      routeParams.forEach(function (param) {
-        mappedUrl = mappedUrl.replace('{' + param + '}', urlParams[param]);
-      });
+    if (Object.keys(urlParams).length !== 0) {
+      if (routeParams.length) {
+        routeParams.forEach(function (param) {
+          mappedUrl = mappedUrl.replace('{' + param + '}', urlParams[param]);
+        });
+      } else {
+        mappedUrl = mappedUrl + '?' + _stringifyParams(urlParams);
+      }
+    }
+
+    if (Object.keys(queryParams).length !== 0) {
+      mappedUrl = mappedUrl + '?' + _stringifyParams(queryParams);
     }
 
     return mappedUrl;
@@ -42,7 +56,8 @@ exports.default = function () {
 
   var generate = function generate(k) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    return _replaceURLParams(_get(k), params);
+    var queryParams = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    return _replaceURLParams(_get(k), params, queryParams);
   };
 
   var set = function set(k, v) {
@@ -87,6 +102,7 @@ exports.default = function () {
 
     _get: _get,
     _getUrlParams: _getUrlParams,
-    _replaceURLParams: _replaceURLParams
+    _replaceURLParams: _replaceURLParams,
+    _stringifyParams: _stringifyParams
   };
 };
