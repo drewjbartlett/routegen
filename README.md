@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/routegen.svg?style=flat-square)](https://www.npmjs.com/package/routegen)
 [![npm](https://img.shields.io/travis/drewjbartlett/routegen.svg?branch=master&style=flat-square)](https://www.npmjs.com/package/routegen)
+[![npm](https://img.shields.io/npm/dt/routegen.svg?style=flat-square)](https://www.npmjs.com/package/routegen)
 
 Define your API and SPA routes in one place. Use them anywhere.
 
