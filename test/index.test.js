@@ -155,6 +155,24 @@ describe('routeGen', () => {
 
       expect(routes._getUrlParams('/foo/{id}/{foo}')).toEqual(['id', 'foo']);
     });
+
+    it('should returns the express-style url params interpolated in a string', () => {
+      const routes = routeGen();
+
+      expect(routes._getUrlParams('/foo/:id')).toEqual(['id']);
+    });
+
+    it('should return the express-style url params interpolated in a string for multiple params', () => {
+      const routes = routeGen();
+
+      expect(routes._getUrlParams('/foo/:id/:foo')).toEqual(['id', 'foo']);
+    });
+
+    it('should return the express-style url params and routegen-style url params interpolated in a string for multiple params', () => { // eslint-disable-line max-len
+      const routes = routeGen();
+
+      expect(routes._getUrlParams('/foo/{id}/:foo')).toEqual(['id', 'foo']);
+    });
   });
 
   describe('_replaceURLParams', () => {
@@ -168,6 +186,24 @@ describe('routeGen', () => {
       const routes = routeGen();
 
       expect(routes._replaceURLParams('/foo/{id}/{foo}', { id: 1, foo: 'bar' }, {})).toEqual('/foo/1/bar');
+    });
+
+    it('should replace the express-style url params from a url and an object', () => {
+      const routes = routeGen();
+
+      expect(routes._replaceURLParams('/foo/:id', { id: 1 }, {})).toEqual('/foo/1');
+    });
+
+    it('should replace the express-style url params from a url and an object', () => {
+      const routes = routeGen();
+
+      expect(routes._replaceURLParams('/foo/:id/:foo', { id: 1, foo: 'bar' }, {})).toEqual('/foo/1/bar');
+    });
+
+    it('should replace the express-style url params and routegen-style url params from a url and an object', () => {
+      const routes = routeGen();
+
+      expect(routes._replaceURLParams('/foo/:id/{foo}', { id: 1, foo: 'bar' }, {})).toEqual('/foo/1/bar');
     });
   });
 

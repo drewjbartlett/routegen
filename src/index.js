@@ -7,7 +7,7 @@ export default (config = {}) => {
   }, config);
 
   const _getUrlParams = url => {
-    let mappedParams = url.match(/{\s*[\w\.]+\s*}/g); // eslint-disable-line
+    let mappedParams = url.match(/(:\w+)|({\s*[\w\.]+\s*})/g); // eslint-disable-line
 
     // if we have mappedParams, strip off the {}
     if (mappedParams !== null) {
@@ -39,6 +39,10 @@ export default (config = {}) => {
         // replace each occurrence of the param with the value passed in
         routeParams.forEach(param => {
           mappedUrl = mappedUrl.replace(`{${param}}`, urlParams[param]);
+        });
+
+        routeParams.forEach(param => {
+          mappedUrl = mappedUrl.replace(`:${param}`, urlParams[param]);
         });
       } else {
         mappedUrl = `${mappedUrl}?${_stringifyParams(urlParams)}`;
